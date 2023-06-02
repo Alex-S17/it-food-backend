@@ -1,5 +1,18 @@
-const app = require('./app')
+require("dotenv").config();
 
-app.listen(3000, () => {
-  console.log("Server running. Use our API on port: 3000")
-})
+const app = require("./app");
+
+const { connectToItFoodDb } = require("./models/connections");
+
+const { PORT = 3002 } = process.env;
+
+module.exports = app.listen(PORT, async () => {
+  try {
+    await connectToItFoodDb();
+    console.log("Database connection successful");
+    console.log(`Server running. Use our API on port: ${PORT}`);
+  } catch (error) {
+    console.log(`Database connection error:${error.message}`);
+    process.exit(1);
+  }
+});
