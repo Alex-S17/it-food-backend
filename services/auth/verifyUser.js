@@ -1,4 +1,3 @@
-// const { User } = require("../../models");
 const bcrypt = require("bcrypt");
 const { User } = require("../../models/userModel");
 const createError = require("http-errors");
