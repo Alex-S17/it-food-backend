@@ -5,22 +5,25 @@ const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 
 const verifyUser = async (req) => {
-  const { verificationCode: receivedCode, email } = req?.body;
+  const { verificationCode: receivedCode, email: receivedEmail } = req?.body;
 
-  const { _id, createdAt, verificationCode } = await User.findOne({ email });
+  const { _id, createdAt, verificationCode } = await User.findOne({
+    email: receivedEmail,
+  });
 
   if (!(await bcrypt.compare(receivedCode, verificationCode))) {
-    return createError(401, "Invalid code");
+    throw createError(401, "Invalid code");
   }
 
-  const token = jwt.sign({ _id, createdAt }, process.env.SECRET_KEY);
+  const createdToken = jwt.sign({ _id, createdAt }, process.env.SECRET_KEY);
 
-  const result = await User.findOneAndUpdate(
-    { verificationCode },
-    { verify: true, verificationCode: null, token },
-    { new: true }
-  );
-  return { token: result.token };
+  const { name, password, phone, email, token, avatarUrl } =
+    await User.findOneAndUpdate(
+      { verificationCode },
+      { verify: true, verificationCode: null, token: createdToken },
+      { new: true }
+    );
+  return { name, password, phone, email, token, avatarUrl };
 };
 
 module.exports = { verifyUser };

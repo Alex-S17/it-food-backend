@@ -3,7 +3,7 @@ const { verifyUser } = require("../../services/auth/verifyUser");
 const verifiedController = async (req, res) => {
   const result = await verifyUser(req);
 
-  res.json(result);
+  res.status(201).json(result);
 };
 
 module.exports = {

@@ -11,12 +11,12 @@ const userSchema = Schema(
     phone: { type: String },
     email: {
       type: String,
-      required: [true, "Email is required"],
       unique: true,
+      required: [true, "Email is required"],
       lowercase: true,
     },
 
-    avatarURL: String,
+    avatarUrl: String,
     token: {
       type: String,
       default: null,
