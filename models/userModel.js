@@ -25,6 +25,10 @@ const userSchema = Schema(
       type: Boolean,
       default: false,
     },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
     verificationCode: {
       type: String,
       required: [true, "Verify token is required"],
@@ -36,11 +40,21 @@ const userSchema = Schema(
 userSchema.pre("save", async function () {
   if (this.isNew) {
     this.password = await bcrypt.hash(this.password, 10);
+    this.verificationCode = await bcrypt.hash(this.verificationCode, 3);
   }
 });
-userSchema.pre("save", async function () {
-  if (this.isNew) {
-    this.verificationCode = await bcrypt.hash(this.verificationCode, 3);
+
+userSchema.pre("findOneAndUpdate", async function () {
+  const data = this.getUpdate();
+
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password.toString(), 10);
+  }
+  if (data.verificationCode) {
+    data.verificationCode = await bcrypt.hash(
+      data.verificationCode.toString(),
+      3
+    );
   }
 });
 

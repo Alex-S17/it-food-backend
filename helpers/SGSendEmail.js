@@ -1,16 +1,35 @@
 const sgMail = require("@sendgrid/mail");
-const { emailTemplate } = require("../templates/emailTemplate");
+const { verifiedEmail } = require("../templates/verifiedEmailTemplate");
+const {
+  changePasswordEmail,
+} = require("../templates/changePasswordEmailTemplate");
 
 require("dotenv").config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const sendEmail = (userMail, code) => {
+const sendVerifiedEmail = (userMail, code) => {
   const msg = {
     to: userMail,
     from: "no-reply-node.js-app@meta.ua",
     subject: " Verify Email Address node.js App",
-    html: emailTemplate(code),
+    html: verifiedEmail(code),
+  };
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+const sendChangePasswordEmail = (userMail, verifyToken) => {
+  const msg = {
+    to: userMail,
+    from: "no-reply-node.js-app@meta.ua",
+    subject: " Verify Email Address node.js App",
+    html: changePasswordEmail(verifyToken),
   };
   sgMail
     .send(msg)
@@ -22,4 +41,4 @@ const sendEmail = (userMail, code) => {
     });
 };
 
-module.exports = { sendEmail };
+module.exports = { sendVerifiedEmail, sendChangePasswordEmail };
