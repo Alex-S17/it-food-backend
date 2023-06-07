@@ -1,7 +1,8 @@
 const { User } = require("../../models/userModel");
-const { sendVerifiedEmail } = require("../../helpers/SGSendEmail");
+
 const createError = require("http-errors");
 const { v4: uuidv4 } = require("uuid");
+const Email = require("../email/email");
 
 const signUp = async (req) => {
   const { name, email, phone, password } = req.body;
@@ -15,9 +16,7 @@ const signUp = async (req) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    sendVerifiedEmail(email, verificationCode);
-
-    return await User.create({
+    const newUser = await User.create({
       name,
       email,
       phone,
@@ -26,6 +25,9 @@ const signUp = async (req) => {
       verificationCode,
       verificationToken,
     });
+
+    await new Email(newUser, null, verificationCode).emailConfirmation();
+    return newUser;
   }
 
   if (user && !user.verify) {
@@ -37,7 +39,7 @@ const signUp = async (req) => {
       { new: true }
     );
 
-    sendVerifiedEmail(email, verificationCode);
+    await new Email(updatedUser, null, verificationCode).emailConfirmation();
 
     return updatedUser;
   }
