@@ -1,16 +1,15 @@
-const { sendChangePasswordEmail } = require("../../helpers/SGSendEmail");
 const { User } = require("../../models/userModel");
+const Email = require("../email/email");
 
 const forgotPassword = async (req) => {
   const { email } = req?.body;
 
-  const user = await User.findOneAndUpdate({ email });
+  const user = await User.findOne({ email });
 
-  console.log(user);
-
-  sendChangePasswordEmail(user.email, user.verificationToken);
-
-  return { result: "forgotPassword" };
+  await new Email(
+    user,
+    `${process.env.API_URL}/users/forgotpassword/${user.verificationToken}`
+  ).passwordReset();
 };
 
 module.exports = { forgotPassword };

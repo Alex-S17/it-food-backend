@@ -25,7 +25,7 @@ router.get(
   asyncWrapper(passwordResetController)
 );
 
-router.post("/forgotPassword", asyncWrapper(forgotPasswordController));
+router.post("/forgotPassword/", asyncWrapper(forgotPasswordController));
 
 router.post("/logout", authMiddleware, asyncWrapper(logOutController));
 

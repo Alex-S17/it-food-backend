@@ -1,5 +1,6 @@
 const { User } = require("../../models/userModel");
-const { sendVerifiedEmail } = require("../../helpers/SGSendEmail");
+
+const Email = require("../email/email");
 
 const passwordReset = async (req) => {
   const { verificationToken } = req?.params;
@@ -13,8 +14,6 @@ const passwordReset = async (req) => {
     { new: true }
   );
 
-  console.log(user);
-
-  sendVerifiedEmail(user.email, newPassword);
+  await new Email(user, null, newPassword).newPassword();
 };
 module.exports = { passwordReset };

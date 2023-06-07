@@ -1,0 +1,29 @@
+extends layout/base   
+
+block content
+    tbody
+        tr
+            td(align='left' style='font-size:0px;padding:10px 25px;word-break:break-word;')
+                div(style='font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#000000;')
+
+                    h1(style='margin: 0; font-size: 32px; line-height: 40px;')
+                        | Hi, #{name}! 
+                        br
+                        |
+                        br
+                        | Email confirmation.
+        tr
+            td(align='left' style='font-size:0px;padding:10px 25px;word-break:break-word;')
+                div(style='font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#000000;')
+                    |To confirm the email, enter the four-digit code in the IT FOOD application. 
+                    p
+        tr
+            td(align='left' style='font-size:0px;padding:10px 25px;word-break:break-word;')
+                div(style='font-size:34px;font-weight:600;line-height:24px;text-align:center;color:#000000;')
+                    |#{verificationCode}
+                    p
+        tr
+            td(align='left' style='font-size:0px;padding:10px 25px;word-break:break-word;')
+                div(style='font-size:14px;font-weight:400;line-height:24px;text-align:left;color:#333333;')
+                    | If you did not make this request, please ignore this email. 
+                    p
