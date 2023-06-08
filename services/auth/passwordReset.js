@@ -14,6 +14,6 @@ const passwordReset = async (req) => {
     { new: true }
   );
 
-  await new Email(user, null, newPassword).newPassword();
+  // await new Email(user, null, newPassword).newPassword();
 };
 module.exports = { passwordReset };

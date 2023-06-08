@@ -4,10 +4,10 @@ const path = require("path");
 const { convert } = require("html-to-text");
 
 module.exports = class Email {
-  constructor(user, url, verificationCode) {
+  constructor(user, url, key) {
     this.to = user.email;
     this.name = user.name;
-    this.verificationCode = verificationCode;
+    this.key = key;
     this.url = url;
     this.from = `IT FOOD <${process.env.EMAIL_FROM}>`;
   }
@@ -21,7 +21,8 @@ module.exports = class Email {
       path.join(__dirname, "..", "..", "views", "emails", `${template}.pug`),
       {
         name: this.name,
-        verificationCode: this.verificationCode,
+        key: this.key,
+        newPassword: this.newPassword,
         url: this.url,
         subject,
       }
@@ -42,10 +43,10 @@ module.exports = class Email {
   }
 
   async emailConfirmation() {
-    this._send("emailConfirmation", "IT FOOD Email Verification");
+    this._send("sendConfirmation", "IT FOOD Email Verification");
   }
 
   async newPassword() {
-    this._send("emailConfirmation", "IT FOOD Change Password");
+    this._send("sendNewPassword", "IT FOOD Change Password");
   }
 };

@@ -1,8 +1,8 @@
 const { User } = require("../../models/userModel");
 
-const createError = require("http-errors");
 const { v4: uuidv4 } = require("uuid");
 const Email = require("../email/email");
+const { ConflictAuthorizedError } = require("../../helpers/errors");
 
 const signUp = async (req) => {
   const { name, email, phone, password } = req.body;
@@ -14,6 +14,10 @@ const signUp = async (req) => {
   const verificationToken = uuidv4();
 
   const user = await User.findOne({ email });
+
+  if (user && user.verify) {
+    throw new ConflictAuthorizedError("Email already in use");
+  }
 
   if (!user) {
     const newUser = await User.create({
@@ -42,10 +46,6 @@ const signUp = async (req) => {
     await new Email(updatedUser, null, verificationCode).emailConfirmation();
 
     return updatedUser;
-  }
-
-  if (user && user.verify) {
-    throw createError(401, "Email in use");
   }
 };
 

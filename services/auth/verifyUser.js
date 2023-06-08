@@ -1,18 +1,22 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../../models/userModel");
-const createError = require("http-errors");
 
 const jwt = require("jsonwebtoken");
+const { NotAuthorizedError } = require("../../helpers/errors");
 
 const verifyUser = async (req) => {
   const { verificationCode: receivedCode, email: receivedEmail } = req?.body;
 
-  const { _id, createdAt, verificationCode } = await User.findOne({
+  const user = await User.findOne({
     email: receivedEmail,
   });
 
+  if (!user) throw new NotAuthorizedError("Verification error");
+
+  const { _id, createdAt, verificationCode } = user;
+
   if (!(await bcrypt.compare(receivedCode, verificationCode))) {
-    throw createError(401, "Invalid code");
+    throw new NotAuthorizedError("Verification error");
   }
 
   const createdToken = jwt.sign({ _id, createdAt }, process.env.SECRET_KEY);
