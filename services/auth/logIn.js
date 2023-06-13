@@ -1,7 +1,10 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../../models/userModel");
-const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
+const {
+  NotAuthorizedError,
+  VerificationError,
+} = require("../../helpers/errors");
 
 const logIn = async (req) => {
   const { email, password } = req?.body;
@@ -14,11 +17,11 @@ const logIn = async (req) => {
   } = await User.findOne({ email });
 
   if (!(await bcrypt.compare(password, userPassword))) {
-    throw createError(401, "Email or password is incorrect");
+    throw new NotAuthorizedError("Email or password is incorrect");
   }
 
   if (!verify) {
-    throw createError(401, "User not verified");
+    throw new VerificationError("User not verified");
   }
 
   const token = jwt.sign({ _id, createdAt }, process.env.SECRET_KEY);

@@ -17,15 +17,41 @@ const {
   passwordResetController,
 } = require("../../controllers/auth/passwordResetController");
 
-router.post("/signup", asyncWrapper(signUpController));
-router.post("/verify", asyncWrapper(verifiedController));
-router.post("/login", asyncWrapper(logInController));
+const {
+  validationMiddleware,
+} = require("../../middleware/validalidationMiddleware");
+const {
+  joiLoginSchema,
+  joiVerifySchema,
+  joiSignUpSchema,
+  joiForgotPasswordSchema,
+} = require("../../models/userModel");
+
+router.post(
+  "/signup",
+  validationMiddleware(joiSignUpSchema),
+  asyncWrapper(signUpController)
+);
+router.post(
+  "/verify",
+  validationMiddleware(joiVerifySchema),
+  asyncWrapper(verifiedController)
+);
+router.post(
+  "/login",
+  validationMiddleware(joiLoginSchema),
+  asyncWrapper(logInController)
+);
 router.get(
   "/forgotPassword/:verificationToken",
   asyncWrapper(passwordResetController)
 );
 
-router.post("/forgotPassword/", asyncWrapper(forgotPasswordController));
+router.post(
+  "/forgotPassword/",
+  validationMiddleware(joiForgotPasswordSchema),
+  asyncWrapper(forgotPasswordController)
+);
 
 router.post("/logout", authMiddleware, asyncWrapper(logOutController));
 

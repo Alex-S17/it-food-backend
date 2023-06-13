@@ -1,13 +1,13 @@
-const createError = require("http-errors");
 const { User } = require("../models/userModel");
 const { verifyToken } = require("../helpers/verifyToken");
+const { NotAuthorizedError } = require("../helpers/errors");
 
 const authMiddleware = async (req, res, next) => {
   const { authorization = "" } = req.headers;
 
   const [bearer, token] = authorization.split(" ");
 
-  bearer !== "Bearer" && next(createError(401, "Not authorized"));
+  bearer !== "Bearer" && next(new NotAuthorizedError("Not authorized"));
   try {
     const user = await User.findOne({ token });
 
@@ -17,7 +17,7 @@ const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
-    next(createError(401, "Not authorized"));
+    next(new NotAuthorizedError("Not authorized"));
   }
 };
 

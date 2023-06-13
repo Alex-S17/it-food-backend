@@ -1,6 +1,49 @@
 const { model, Schema } = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const Joi = require("joi");
+
+const joiSignUpSchema = Joi.object({
+  name: Joi.string().min(3).max(16).required(),
+  phone: Joi.string(),
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net", "uk", "ua", "org"] },
+    })
+    .required(),
+  password: Joi.string().min(6).alphanum().required(),
+}).options({ abortEarly: false });
+
+const joiLoginSchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net", "uk", "ua", "org"] },
+    })
+    .required(),
+  password: Joi.string().min(6).alphanum().required(),
+}).options({ abortEarly: false });
+
+const joiVerifySchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net", "uk", "ua", "org"] },
+    })
+    .required(),
+  verificationCode: Joi.string().required(),
+}).options({ abortEarly: false });
+
+const joiForgotPasswordSchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net", "uk", "ua", "org"] },
+    })
+    .required(),
+}).options({ abortEarly: false });
+
 const userSchema = Schema(
   {
     name: { type: String, required: [true, "Name is required"] },
@@ -62,4 +105,8 @@ const User = model("user", userSchema);
 
 module.exports = {
   User,
+  joiSignUpSchema,
+  joiLoginSchema,
+  joiVerifySchema,
+  joiForgotPasswordSchema,
 };
