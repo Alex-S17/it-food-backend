@@ -37,6 +37,12 @@ class ConflictAuthorizedError extends ItFoodAppErrors {
     this.status = 409;
   }
 }
+class FileError extends ItFoodAppErrors {
+  constructor(message) {
+    super(message);
+    this.status = 400;
+  }
+}
 
 module.exports = {
   ItFoodAppErrors,
@@ -44,6 +50,8 @@ module.exports = {
   NonExistingParamsError,
   NotAuthorizedError,
   ConflictAuthorizedError,
-
+  FileError,
   VerificationError,
 };
+
+// FileError;

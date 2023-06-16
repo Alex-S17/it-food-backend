@@ -9,7 +9,7 @@ const joiSignUpSchema = Joi.object({
   email: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ["com", "net", "uk", "ua", "org"] },
+      // tlds: { allow: ["com", "net", "uk", "ua", "org"] },
     })
     .required(),
   password: Joi.string().min(6).alphanum().required(),
@@ -42,6 +42,12 @@ const joiForgotPasswordSchema = Joi.object({
       tlds: { allow: ["com", "net", "uk", "ua", "org"] },
     })
     .required(),
+}).options({ abortEarly: false });
+
+const joiChangeUserDataSchema = Joi.object({
+  name: Joi.string().min(3).max(16).required(),
+  phone: Joi.string(),
+  avatarUrl: Joi.string(),
 }).options({ abortEarly: false });
 
 const userSchema = Schema(
@@ -109,4 +115,5 @@ module.exports = {
   joiLoginSchema,
   joiVerifySchema,
   joiForgotPasswordSchema,
+  joiChangeUserDataSchema,
 };
