@@ -2,10 +2,10 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 
-const itemsRouter = require("./routes/api/items");
 const { authRouter } = require("./routes/api/auth");
 const { userRouter } = require("./routes/api/user");
 const { errorHandler } = require("./helpers/errorHandler");
+const { dishRouter } = require("./routes/api/dish");
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/items", itemsRouter);
+app.use("/api/dishes", dishRouter);
 
 app.use("/api/users/", authRouter, userRouter);
 
