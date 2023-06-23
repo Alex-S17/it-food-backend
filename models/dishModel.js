@@ -1,6 +1,6 @@
 const { model, Schema } = require("mongoose");
 
-const foodItemSchema = Schema({
+const dishSchema = Schema({
   title: String,
   category: String,
   area: String,
@@ -10,8 +10,8 @@ const foodItemSchema = Schema({
   price: String,
 });
 
-const FoodItem = model("fd", foodItemSchema);
+const Dish = model("dish", dishSchema);
 
 module.exports = {
-  FoodItem,
+  Dish,
 };

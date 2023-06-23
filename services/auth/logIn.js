@@ -9,12 +9,13 @@ const {
 const logIn = async (req) => {
   const { email, password } = req?.body;
 
-  const {
-    _id,
-    createdAt,
-    password: userPassword,
-    verify,
-  } = await User.findOne({ email });
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new NotAuthorizedError("Email or password is incorrect");
+  }
+
+  const { _id, createdAt, password: userPassword, verify } = user;
 
   if (!(await bcrypt.compare(password, userPassword))) {
     throw new NotAuthorizedError("Email or password is incorrect");
