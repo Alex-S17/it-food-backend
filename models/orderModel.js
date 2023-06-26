@@ -20,6 +20,7 @@ const orderModel = Schema(
       required: function () {
         return !this.owner;
       },
+      set: (phone) => (phone === "" ? undefined : phone),
     },
     note: String,
     option: {
