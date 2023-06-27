@@ -4,7 +4,7 @@ const addOrder = async (req) => {
   const { note, option, dishes, phone, customerName } = req.body;
   const user = req.user;
 
-  const order = Order.create({
+  return await Order.create({
     customerName,
     note,
     option,
@@ -12,10 +12,6 @@ const addOrder = async (req) => {
     owner: user ? user._id : null,
     phone,
   });
-
-  // add custom errors
-
-  return order;
 };
 
 module.exports = { addOrder };

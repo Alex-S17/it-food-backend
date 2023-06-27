@@ -1,7 +1,7 @@
 const { User } = require("../models/userModel");
 const { verifyToken } = require("../helpers/verifyToken");
 
-const addOrderMiddleware = async (req, res, next) => {
+const orderMiddleware = async (req, res, next) => {
   const { authorization = "" } = req.headers;
 
   const [, token] = authorization.split(" ");
@@ -19,4 +19,4 @@ const addOrderMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { addOrderMiddleware };
+module.exports = { orderMiddleware };

@@ -11,7 +11,9 @@ const orderModel = Schema(
     },
     customerName: {
       type: String,
-      required: false,
+      required: function () {
+        return !this.owner;
+      },
       set: (name) => (name === "" ? undefined : name),
     },
 
@@ -28,18 +30,19 @@ const orderModel = Schema(
       required: [true, "Order option is required"],
       default: "dinein",
     },
-    dishes: [
-      {
-        _id: {
-          type: mongoose.Types.ObjectId,
-          ref: "dish",
-        },
-        quantity: {
-          type: String,
-          required: [true, "Dish quantity is required"],
-        },
+    dishes: {
+      type: Array,
+      _id: {
+        type: mongoose.Types.ObjectId,
+        ref: "dish",
       },
-    ],
+      quantity: {
+        type: String,
+        required: [true, "Dish quantity is required"],
+      },
+      required: [true, "Dishes to order option is required"],
+      validate: (v) => Array.isArray(v) && v.length > 0,
+    },
   },
   { versionKey: false, timestamps: true }
 );
