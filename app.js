@@ -6,6 +6,7 @@ const { authRouter } = require("./routes/api/auth");
 const { userRouter } = require("./routes/api/user");
 const { errorHandler } = require("./helpers/errorHandler");
 const { dishRouter } = require("./routes/api/dish");
+const { userOrder } = require("./routes/api/order");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/dishes", dishRouter);
 
 app.use("/api/users/", authRouter, userRouter);
+app.use("/api/order/", userOrder);
 
 app.use(errorHandler);
 
