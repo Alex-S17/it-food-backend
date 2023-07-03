@@ -1,4 +1,4 @@
-const { model, Schema, SchemaTypes, default: mongoose } = require("mongoose");
+const { model, Schema, SchemaTypes } = require("mongoose");
 
 const orderModel = Schema(
   {
@@ -9,6 +9,7 @@ const orderModel = Schema(
         return !this.phone;
       },
     },
+    orderNumber: { type: String },
     customerName: {
       type: String,
       required: function () {
@@ -30,19 +31,24 @@ const orderModel = Schema(
       required: [true, "Order option is required"],
       default: "dinein",
     },
-    dishes: {
-      type: Array,
-      _id: {
-        type: mongoose.Types.ObjectId,
-        ref: "dish",
+    orderedDish: [
+      {
+        id: {
+          type: Schema.Types.ObjectId,
+          ref: "ingredient",
+          required: [true, "Measure is required"],
+        },
+        quantity: {
+          type: String,
+          required: [true, "Dish quantity is required"],
+        },
+        _id: false,
       },
-      quantity: {
-        type: String,
-        required: [true, "Dish quantity is required"],
-      },
-      required: [true, "Dishes to order option is required"],
-      validate: (v) => Array.isArray(v) && v.length > 0,
-    },
+
+      // required: [true, "Dishes to order option is required"],
+
+      //  validate: (v) => Array.isArray(v) && v.length > 0,
+    ],
   },
   { versionKey: false, timestamps: true }
 );
