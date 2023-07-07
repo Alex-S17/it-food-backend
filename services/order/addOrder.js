@@ -2,14 +2,16 @@ const { Order } = require("../../models/orderModel");
 
 const addOrder = async (req) => {
   const { note, option, orderedDish, phone, customerName } = req.body;
-  console.log("addOrder => orderedDish:", orderedDish);
 
   const user = req.user;
 
-  const orderCount = await Order.count({});
+  const [lastOrder] = await Order.find().sort({ _id: -1 }).limit(1);
 
   return await Order.create({
-    orderNumber: String(orderCount + 1).padStart(6, "0"),
+    orderNumber: String(
+      lastOrder ? Number(lastOrder.orderNumber) + 1 : 1
+    ).padStart(6, "0"),
+
     customerName,
     note,
     option,

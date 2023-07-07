@@ -64,9 +64,7 @@ const getLastOrder = async (req) => {
     },
   ]);
 
-  return result;
-
-  // return Order.findOne({ owner, phone }).sort({ _id: -1 });
+  return result[0];
 };
 
 module.exports = { getLastOrder };
