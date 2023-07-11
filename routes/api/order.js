@@ -12,9 +12,13 @@ const {
 const {
   deleteOrderController,
 } = require("../../controllers/order/deleteOrderController");
+const {
+  confirmOrderController,
+} = require("../../controllers/order/confirmOrderController");
 
 router.post("/", orderMiddleware, asyncWrapper(addOrderController));
 router.post("/last", orderMiddleware, asyncWrapper(getLastOrderController));
 router.post("/delete", asyncWrapper(deleteOrderController));
+router.patch("/confirm", asyncWrapper(confirmOrderController));
 
 module.exports = { userOrder: router };

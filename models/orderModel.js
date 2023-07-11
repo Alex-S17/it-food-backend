@@ -35,7 +35,7 @@ const orderModel = Schema(
       {
         id: {
           type: Schema.Types.ObjectId,
-          ref: "ingredient",
+          ref: "dishes",
           required: [true, "Measure is required"],
         },
         quantity: {
@@ -44,11 +44,16 @@ const orderModel = Schema(
         },
         _id: false,
       },
-
-      // required: [true, "Dishes to order option is required"],
-
-      //  validate: (v) => Array.isArray(v) && v.length > 0,
     ],
+    totalPrice: String,
+    tipAmount: String,
+    confirmed: { type: Boolean, default: false },
+
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "mastercard", "visa", "gift"],
+      default: "cash",
+    },
   },
   { versionKey: false, timestamps: true }
 );
