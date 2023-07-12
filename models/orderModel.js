@@ -48,6 +48,8 @@ const orderModel = Schema(
     totalPrice: String,
     tipAmount: String,
     confirmed: { type: Boolean, default: false },
+    totalWithTipsPrice: String,
+    giftCoin: Number,
 
     paymentMethod: {
       type: String,

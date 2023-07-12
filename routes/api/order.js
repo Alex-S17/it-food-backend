@@ -15,10 +15,16 @@ const {
 const {
   confirmOrderController,
 } = require("../../controllers/order/confirmOrderController");
+const {
+  getUserOrderController,
+} = require("../../controllers/order/getUserOrderController");
+const { authMiddleware } = require("../../middleware/authMiddleware");
 
 router.post("/", orderMiddleware, asyncWrapper(addOrderController));
 router.post("/last", orderMiddleware, asyncWrapper(getLastOrderController));
 router.post("/delete", asyncWrapper(deleteOrderController));
 router.patch("/confirm", asyncWrapper(confirmOrderController));
+
+router.get("/history", authMiddleware, asyncWrapper(getUserOrderController));
 
 module.exports = { userOrder: router };
