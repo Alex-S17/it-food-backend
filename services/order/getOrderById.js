@@ -1,14 +1,17 @@
-const ObjectId = require("mongodb").ObjectId;
+const { NonExistingParamsError } = require("../../helpers/errors");
 const { Order } = require("../../models/orderModel");
+const ObjectId = require("mongodb").ObjectId;
 
-const getUserOrder = async (req) => {
-  const { _id: owner } = req.user;
+const getOrderById = async (req) => {
+  const orderId = req.params.orderId;
 
-  const ownerId = new ObjectId(owner);
+  if (!orderId) throw new NonExistingParamsError("Credentials error");
+
+  const _id = new ObjectId(orderId);
 
   const result = await Order.aggregate([
     {
-      $match: { owner: ownerId },
+      $match: { _id },
     },
 
     {
@@ -46,21 +49,13 @@ const getUserOrder = async (req) => {
       $unset: [
         "dishesData",
         "orderedDish.ingredients",
-        "orderedDish.time",
-        "orderedDish.tags",
-        "orderedDish.updatedAt",
-        "orderedDish.collection",
-        "orderedDish.category",
-        "orderedDish.area",
-        "orderedDish.description",
-        "orderedDish.thumb",
         "orderedDish.id",
         "orderedDish.instructions",
       ],
     },
   ]);
 
-  return result;
+  return result[0];
 };
 
-module.exports = { getUserOrder };
+module.exports = { getOrderById };
