@@ -10,7 +10,7 @@ const getUserOrder = async (req) => {
     {
       $match: { owner: ownerId },
     },
-
+    { $sort: { _id: -1 } },
     {
       $lookup: {
         from: "dishes",
