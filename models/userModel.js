@@ -82,6 +82,7 @@ const userSchema = Schema(
       type: String,
       required: [true, "Verify token is required"],
     },
+    giftCoin: { type: Number, default: 0 },
   },
   { versionKey: false, timestamps: true }
 );

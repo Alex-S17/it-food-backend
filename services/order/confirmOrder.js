@@ -2,11 +2,23 @@ const ObjectId = require("mongodb").ObjectId;
 const { Order } = require("../../models/orderModel");
 
 const { NonExistingParamsError } = require("../../helpers/errors");
+const { User } = require("../../models/userModel");
+const { verifyToken } = require("../../helpers/verifyToken");
 
 const confirmOrder = async (req) => {
   const { _id, paymentMethod, tipAmount } = req.body;
 
+  const { authorization = "" } = req.headers;
+
+  const [, token] = authorization.split(" ");
+
+  const verifiedToken = verifyToken(token);
+
+  const { _id: owner } = verifiedToken || {};
+  console.log("confirmOrder => owner:", owner);
+
   const orderId = new ObjectId(_id);
+  const ownerId = new ObjectId(owner);
 
   const [{ totalPrice }] = await Order.aggregate([
     {
@@ -80,19 +92,44 @@ const confirmOrder = async (req) => {
 
   if (!totalPrice) throw new NonExistingParamsError("Credentials error");
 
-  const totalWithTipsPrice =
-    totalPrice / 100 + (totalPrice / 10000) * tipAmount;
+  const totalWithTipsPrice = (
+    totalPrice / 100 +
+    (totalPrice / 10000) * tipAmount
+  ).toFixed(2);
+
+  const calculatedGiftCoin = (
+    (((totalPrice / 100) * 0.03 * tipAmount) / 10) *
+    100
+  ).toFixed(0);
 
   const updatedOrder = await Order.findByIdAndUpdate(
     { _id },
     {
       paymentMethod,
       tipAmount,
-      totalPrice: totalWithTipsPrice.toFixed(2),
+      totalPrice: totalPrice / 100,
+      totalWithTipsPrice,
       confirmed: true,
+      giftCoin: calculatedGiftCoin,
     },
     { new: true }
   );
+
+  const result = await Order.aggregate([
+    {
+      $match: { owner: ownerId, confirmed: true },
+    },
+    {
+      $group: {
+        _id: null,
+        totalGiftCoin: { $sum: { $toInt: "$giftCoin" } },
+      },
+    },
+  ]);
+
+  const [{ totalGiftCoin }] = result || null;
+
+  await User.findOneAndUpdate({ token }, { giftCoin: totalGiftCoin });
 
   return updatedOrder;
 };
