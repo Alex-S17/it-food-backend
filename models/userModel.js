@@ -83,7 +83,17 @@ const userSchema = Schema(
       required: [true, "Verify token is required"],
     },
     giftCoin: { type: Number, default: 0 },
+
+    favorite: {
+      type: Array,
+      default: [
+        "640cd5ac2d9fecf12e88985b",
+        "640cd5ac2d9fecf12e88981c",
+        "640cd5ac2d9fecf12e88988d",
+      ],
+    },
   },
+
   { versionKey: false, timestamps: true }
 );
 
