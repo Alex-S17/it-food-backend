@@ -4,6 +4,10 @@ const ObjectId = require("mongodb").ObjectId;
 
 const getOrderById = async (req) => {
   const orderId = req.params.orderId;
+  // const user = req.user;
+  // console.log("getOrderById => user:", user);
+
+  // add check user
 
   if (!orderId) throw new NonExistingParamsError("Credentials error");
 

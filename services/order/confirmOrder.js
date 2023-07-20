@@ -15,7 +15,6 @@ const confirmOrder = async (req) => {
   const verifiedToken = verifyToken(token);
 
   const { _id: owner } = verifiedToken || {};
-  console.log("confirmOrder => owner:", owner);
 
   const orderId = new ObjectId(_id);
   const ownerId = new ObjectId(owner);
