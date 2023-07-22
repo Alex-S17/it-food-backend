@@ -15,7 +15,6 @@ const getOrderById = async (req) => {
   const owner = new ObjectId(user._id);
 
   const result = await Order.aggregate([
-  
     {
       $match: { _id, owner },
     },
@@ -60,7 +59,6 @@ const getOrderById = async (req) => {
       ],
     },
   ]);
-  console.log("getOrderById => result:", result);
 
   if (result.length <= 0) throw new NotAuthorizedError("Not authorized");
 

@@ -123,7 +123,9 @@ const confirmOrder = async (req) => {
       },
     ]);
     const [{ totalGiftCoin }] = result || null;
+
     await User.findOneAndUpdate({ token }, { giftCoin: totalGiftCoin });
+
     return updatedOrder;
   } else {
     return await Order.findByIdAndUpdate(
