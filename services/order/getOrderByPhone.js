@@ -2,27 +2,18 @@ const { NonExistingParamsError } = require("../../helpers/errors");
 const { Order } = require("../../models/orderModel");
 const ObjectId = require("mongodb").ObjectId;
 
-const getLastOrder = async (req) => {
-  const userId = req.user?._id;
+const getOrderByPhone = async (req) => {
+  const { phone, _id: orderId } = req.body || {};
 
-  const phone = req.body?.phone;
+  if (!phone || !orderId) throw new NonExistingParamsError("Credentials error");
 
-  const owner = new ObjectId(userId);
-
-  if (!phone && !userId) throw new NonExistingParamsError("Credentials error");
+  const _id = new ObjectId(orderId);
 
   const result = await Order.aggregate([
     {
-      $match: {
-        $and: [
-          {
-            $or: [{ owner }, { phone }],
-          },
-        ],
-      },
+      $match: { _id, phone },
     },
-    { $sort: { _id: -1 } },
-    { $limit: 1 },
+
     {
       $lookup: {
         from: "dishes",
@@ -67,4 +58,4 @@ const getLastOrder = async (req) => {
   return result[0];
 };
 
-module.exports = { getLastOrder };
+module.exports = { getOrderByPhone };

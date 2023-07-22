@@ -39,16 +39,16 @@ const orderModel = Schema(
           required: [true, "Measure is required"],
         },
         quantity: {
-          type: String,
+          type: Number,
           required: [true, "Dish quantity is required"],
         },
         _id: false,
       },
     ],
-    totalPrice: String,
-    tipAmount: String,
+    totalPrice: Number,
+    tipAmount: Number,
     confirmed: { type: Boolean, default: false },
-    totalWithTipsPrice: String,
+    totalWithTipsPrice: Number,
     giftCoin: Number,
 
     paymentMethod: {

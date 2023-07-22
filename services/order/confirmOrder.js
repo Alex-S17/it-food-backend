@@ -11,19 +11,12 @@ const confirmOrder = async (req) => {
   const { authorization = "" } = req.headers;
 
   const [, token] = authorization.split(" ");
-
-  const verifiedToken = verifyToken(token);
-
-  const { _id: owner } = verifiedToken || {};
-
   const orderId = new ObjectId(_id);
-  const ownerId = new ObjectId(owner);
 
   const [{ totalPrice }] = await Order.aggregate([
     {
       $match: { _id: orderId },
     },
-
     {
       $lookup: {
         from: "dishes",
@@ -96,41 +89,55 @@ const confirmOrder = async (req) => {
     (totalPrice / 10000) * tipAmount
   ).toFixed(2);
 
-  const calculatedGiftCoin = (
-    (((totalPrice / 100) * 0.03 * tipAmount) / 10) *
-    100
-  ).toFixed(0);
+  if (token) {
+    const verifiedToken = verifyToken(token);
+    const { _id: owner } = verifiedToken || {};
 
-  const updatedOrder = await Order.findByIdAndUpdate(
-    { _id },
-    {
-      paymentMethod,
-      tipAmount,
-      totalPrice: totalPrice / 100,
-      totalWithTipsPrice,
-      confirmed: true,
-      giftCoin: calculatedGiftCoin,
-    },
-    { new: true }
-  );
+    const ownerId = new ObjectId(owner);
+    const calculatedGiftCoin = (
+      (((totalPrice / 100) * 0.03 * tipAmount) / 10) *
+      100
+    ).toFixed(0);
 
-  const result = await Order.aggregate([
-    {
-      $match: { owner: ownerId, confirmed: true },
-    },
-    {
-      $group: {
-        _id: null,
-        totalGiftCoin: { $sum: { $toInt: "$giftCoin" } },
+    const updatedOrder = await Order.findByIdAndUpdate(
+      { _id },
+      {
+        paymentMethod,
+        tipAmount,
+        totalPrice: totalPrice / 100,
+        totalWithTipsPrice,
+        confirmed: true,
+        giftCoin: calculatedGiftCoin,
       },
-    },
-  ]);
-
-  const [{ totalGiftCoin }] = result || null;
-
-  await User.findOneAndUpdate({ token }, { giftCoin: totalGiftCoin });
-
-  return updatedOrder;
+      { new: true }
+    );
+    const result = await Order.aggregate([
+      {
+        $match: { owner: ownerId, confirmed: true },
+      },
+      {
+        $group: {
+          _id: null,
+          totalGiftCoin: { $sum: { $toInt: "$giftCoin" } },
+        },
+      },
+    ]);
+    const [{ totalGiftCoin }] = result || null;
+    await User.findOneAndUpdate({ token }, { giftCoin: totalGiftCoin });
+    return updatedOrder;
+  } else {
+    return await Order.findByIdAndUpdate(
+      { _id },
+      {
+        paymentMethod,
+        tipAmount,
+        totalPrice: totalPrice / 100,
+        totalWithTipsPrice,
+        confirmed: true,
+      },
+      { new: true }
+    );
+  }
 };
 
 module.exports = { confirmOrder };
