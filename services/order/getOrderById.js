@@ -1,17 +1,22 @@
-const { NonExistingParamsError } = require("../../helpers/errors");
+const {
+  NonExistingParamsError,
+  NotAuthorizedError,
+} = require("../../helpers/errors");
 const { Order } = require("../../models/orderModel");
 const ObjectId = require("mongodb").ObjectId;
 
 const getOrderById = async (req) => {
   const orderId = req.params.orderId;
+  const user = req.user;
 
   if (!orderId) throw new NonExistingParamsError("Credentials error");
 
   const _id = new ObjectId(orderId);
+  const owner = new ObjectId(user._id);
 
   const result = await Order.aggregate([
     {
-      $match: { _id },
+      $match: { _id, owner },
     },
 
     {
@@ -54,6 +59,8 @@ const getOrderById = async (req) => {
       ],
     },
   ]);
+
+  if (result.length <= 0) throw new NotAuthorizedError("Not authorized");
 
   return result[0];
 };

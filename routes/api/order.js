@@ -6,9 +6,7 @@ const {
   addOrderController,
 } = require("../../controllers/order/addOrderController");
 const { orderMiddleware } = require("../../middleware/orderMiddleware");
-const {
-  getLastOrderController,
-} = require("../../controllers/order/getLastOrderController");
+
 const {
   deleteOrderController,
 } = require("../../controllers/order/deleteOrderController");
@@ -23,11 +21,18 @@ const { authMiddleware } = require("../../middleware/authMiddleware");
 const {
   getOrderByIdController,
 } = require("../../controllers/order/getOrderByIdController");
+const {
+  getUserOrderCountController,
+} = require("../../controllers/order/getUserOrderCountController");
+const {
+  getOrderByPhoneController,
+} = require("../../controllers/order/getOrderByPhoneController");
 
 router.post("/", orderMiddleware, asyncWrapper(addOrderController));
-router.post("/last", orderMiddleware, asyncWrapper(getLastOrderController));
+router.post("/byPhone", asyncWrapper(getOrderByPhoneController));
 router.post("/delete", asyncWrapper(deleteOrderController));
 router.patch("/confirm", asyncWrapper(confirmOrderController));
+router.get("/count", authMiddleware, asyncWrapper(getUserOrderCountController));
 
 router.get("/history", authMiddleware, asyncWrapper(getUserOrderController));
 router.get("/:orderId", authMiddleware, asyncWrapper(getOrderByIdController));

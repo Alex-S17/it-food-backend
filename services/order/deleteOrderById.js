@@ -7,6 +7,7 @@ const deleteOrderById = async (req) => {
   const result = await Order.findOneAndDelete({ _id });
 
   if (!result) throw new NonExistingParamsError("Order error");
+  return { _id: result._id };
 };
 
 module.exports = { deleteOrderById };

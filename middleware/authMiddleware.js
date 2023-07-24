@@ -9,14 +9,11 @@ const authMiddleware = async (req, res, next) => {
 
   bearer !== "Bearer" && next(new NotAuthorizedError("Not authorized"));
   try {
-    const user = await User.findOne({ token });
-    // console.log("User222=", user);
 
-    const verifiedToken = verifyToken(user.token);
+    const { _id } = verifyToken(token);
 
-    console.log("verifiedToken=", verifiedToken);
+    const user = await User.findOne({ _id });
 
-    // req.user = verifiedToken;
     req.user = user;
 
     next();
