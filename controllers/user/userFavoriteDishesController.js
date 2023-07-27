@@ -1,7 +1,4 @@
-const {
-  getCurrentUser,
-  userFavoriteDishes,
-} = require("../../services/user/userFavoriteDishes");
+const { getCurrentUser, userFavoriteDishes } = require("../../services/user");
 
 const userFavoriteDishesController = async (req, res) => {
   const currentUser = await getCurrentUser(req);

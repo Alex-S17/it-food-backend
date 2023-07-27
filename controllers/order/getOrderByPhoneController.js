@@ -1,4 +1,4 @@
-const { getOrderByPhone } = require("../../services/order/getOrderByPhone");
+const { getOrderByPhone } = require("../../services/order");
 
 const getOrderByPhoneController = async (req, res) => {
   const result = await getOrderByPhone(req);

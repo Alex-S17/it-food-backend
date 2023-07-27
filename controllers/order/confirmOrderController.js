@@ -1,4 +1,4 @@
-const { confirmOrder } = require("../../services/order/confirmOrder");
+const { confirmOrder } = require("../../services/order");
 
 const confirmOrderController = async (req, res) => {
   const result = await confirmOrder(req);

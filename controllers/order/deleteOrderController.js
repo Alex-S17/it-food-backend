@@ -1,4 +1,4 @@
-const { deleteOrderById } = require("../../services/order/deleteOrderById");
+const { deleteOrderById } = require("../../services/order");
 
 const deleteOrderController = async (req, res) => {
   const result = await deleteOrderById(req);

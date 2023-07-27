@@ -1,4 +1,4 @@
-const { logIn } = require("../../services/auth/logIn");
+const { logIn } = require("../../services/auth");
 
 const logInController = async (req, res) => {
   const result = await logIn(req);

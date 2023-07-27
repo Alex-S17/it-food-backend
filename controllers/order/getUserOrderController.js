@@ -1,4 +1,4 @@
-const { getUserOrder } = require("../../services/order/getUserOrder");
+const { getUserOrder } = require("../../services/order");
 
 const getUserOrderController = async (req, res) => {
   const result = await getUserOrder(req);
