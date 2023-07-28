@@ -10,6 +10,7 @@ const getCurrentUser = async (req) => {
 
 const userFavoriteDishes = async (id) => {
   const favoriteDish = await Dish.findById(id);
+    // console.log("favoriteDish=======", favoriteDish.title);
 
   return favoriteDish;
 };
