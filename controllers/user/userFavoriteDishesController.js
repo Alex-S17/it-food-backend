@@ -1,12 +1,13 @@
 const {
-  getCurrentUser,
+  // getCurrentUser,
   userFavoriteDishes,
 } = require("../../services/user/userFavoriteDishes");
 
 const userFavoriteDishesController = async (req, res) => {
-  const currentUser = await getCurrentUser(req);
+  // const currentUser = await getCurrentUser(req);
+  // const arrayOfFavoriteID = currentUser.favorite;
 
-  const arrayOfFavoriteID = currentUser.favorite;
+  const arrayOfFavoriteID = req.user.favorite;
 
   // const arrayOfFavoriteDishes = await arrayOfFavoriteID.map((id) => {
   //   return userFavoriteDishes(id);
