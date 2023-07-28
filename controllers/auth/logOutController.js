@@ -1,4 +1,4 @@
-const { logOut } = require("../../services/auth/logOut");
+const { logOut } = require("../../services/auth");
 
 const logOutController = async (req, res) => {
   await logOut(req);

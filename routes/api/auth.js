@@ -2,30 +2,25 @@ const express = require("express");
 const router = express.Router();
 const { asyncWrapper } = require("../../helpers/asyncWrapper");
 
-const { signUpController } = require("../../controllers/auth/signUpController");
-const { logInController } = require("../../controllers/auth/logInController");
-const {
-  verifiedController,
-} = require("../../controllers/auth/verifiedController");
-const { logOutController } = require("../../controllers/auth/logOutController");
 const { authMiddleware } = require("../../middleware/authMiddleware");
-const {
-  forgotPasswordController,
-} = require("../../controllers/auth/forgotPasswordController");
 
-const {
-  passwordResetController,
-} = require("../../controllers/auth/passwordResetController");
-
-const {
-  validationMiddleware,
-} = require("../../middleware/validalidationMiddleware");
 const {
   joiLoginSchema,
   joiVerifySchema,
   joiSignUpSchema,
   joiForgotPasswordSchema,
 } = require("../../models/userModel");
+
+const {
+  signUpController,
+  logInController,
+  logOutController,
+  passwordResetController,
+  verifiedController,
+  forgotPasswordController,
+} = require("../../controllers/auth");
+
+const { validationMiddleware } = require("../../middleware");
 
 router.post(
   "/signup",

@@ -2,27 +2,15 @@ const express = require("express");
 const router = express.Router();
 const { asyncWrapper } = require("../../helpers/asyncWrapper");
 
-const { authMiddleware } = require("../../middleware/authMiddleware");
 const {
   changeUserDataController,
-} = require("../../controllers/user/changeUserDataController");
-
-const {
   userFavoriteDishesController,
-} = require("../../controllers/user/userFavoriteDishesController");
-
-const {
   addToFavoriteDishesController,
-} = require("../../controllers/user/addToFavoriteDishesController");
-
-const {
   deleteFromFavoriteDishesController,
-} = require("../../controllers/user/deleteFromFavoriteDishesController");
-
-const { uploadCloud } = require("../../middleware/uploadMiddleware");
-const {
   currentUserController,
-} = require("../../controllers/user/currentUserController");
+} = require("../../controllers/user");
+
+const { authMiddleware, uploadCloud } = require("../../middleware");
 
 // const {
 //   validationMiddleware,

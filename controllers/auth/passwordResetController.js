@@ -1,5 +1,4 @@
-const { passwordReset } = require("../../services/auth/passwordReset");
-
+const { passwordReset } = require("../../services/auth");
 const { page } = require("../../services/pages/page");
 
 const passwordResetController = async (req, res) => {

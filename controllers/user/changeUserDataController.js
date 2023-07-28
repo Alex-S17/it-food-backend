@@ -1,4 +1,4 @@
-const { userDataChange } = require("../../services/user/userDataChange");
+const { userDataChange } = require("../../services/user");
 
 const changeUserDataController = async (req, res) => {
   const result = await userDataChange(req);

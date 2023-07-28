@@ -8,7 +8,6 @@ const addToFavoriteDishes = async (req, arrayOfFavorite) => {
   // console.log("newFavorite2=", newFavorite);
   arrayOfFavorite.push(newFavorite);
   // console.log("arrayOfFavorite2=", arrayOfFavorite);
-
   await User.findByIdAndUpdate(
     _id,
     { favorite: arrayOfFavorite },

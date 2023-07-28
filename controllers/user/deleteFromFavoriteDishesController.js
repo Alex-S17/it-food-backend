@@ -1,7 +1,7 @@
-// const { getCurrentUser } = require("../../services/user/userFavoriteDishes");
+
 const {
   deleteFromFavoriteDishes,
-} = require("../../services/user/deleteFromFavoriteDishes");
+} = require("../../services/user");
 
 const deleteFromFavoriteDishesController = async (req, res) => {
   // const currentUser = await getCurrentUser(req);

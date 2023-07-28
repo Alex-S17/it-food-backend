@@ -10,6 +10,7 @@ const deleteFromFavoriteDishes = async (req, arrayOfFavorite) => {
   arrayOfFavorite.splice(arrayOfFavorite.indexOf(delFavorite), 1);
   // console.log("arrayOfFavorite4=", arrayOfFavorite);
 
+
   await User.findByIdAndUpdate(
     _id,
     { favorite: arrayOfFavorite },
