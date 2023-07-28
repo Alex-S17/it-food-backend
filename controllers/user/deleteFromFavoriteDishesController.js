@@ -1,6 +1,6 @@
 
 const {
-  deleteFromFavoriteDishes,
+  deleteFromFavoriteDishes
 } = require("../../services/user");
 
 const deleteFromFavoriteDishesController = async (req, res) => {
