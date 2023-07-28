@@ -1,4 +1,4 @@
-const { getOrderById } = require("../../services/order/getOrderById");
+const { getOrderById } = require("../../services/order");
 
 const getOrderByIdController = async (req, res) => {
   const result = await getOrderById(req);

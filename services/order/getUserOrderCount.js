@@ -6,31 +6,37 @@ const getUserOrderCount = async (req) => {
 
   const owner = new ObjectId(_id);
 
-  const [{ totalPrice, totalPriceWithTips, totalGiftCoin, confirmedOrder }] =
-    await Order.aggregate([
-      {
-        $match: { owner, confirmed: true },
-      },
+  const [firstResult] = await Order.aggregate([
+    {
+      $match: { owner, confirmed: true },
+    },
 
-      {
-        $group: {
-          _id: null,
-          totalPrice: {
-            $sum: { $round: ["$totalPrice", 2] },
-          },
-          totalPriceWithTips: {
-            $sum: { $round: ["$totalWithTipsPrice", 1] },
-          },
-          totalGiftCoin: {
-            $sum: { $round: ["$giftCoin", 2] },
-          },
-
-          confirmedOrder: { $sum: 1 },
+    {
+      $group: {
+        _id: null,
+        totalPrice: {
+          $sum: { $round: ["$totalPrice", 2] },
         },
-      },
-    ]);
+        totalPriceWithTips: {
+          $sum: { $round: ["$totalWithTipsPrice", 1] },
+        },
+        totalGiftCoin: {
+          $sum: { $round: ["$giftCoin", 2] },
+        },
 
-  const [{ totalOrderedDish }] = await Order.aggregate([
+        confirmedOrder: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const {
+    totalPrice = 0,
+    totalPriceWithTips = 0,
+    totalGiftCoin = 0,
+    confirmedOrder = 0,
+  } = firstResult || {};
+
+  const [secondResult] = await Order.aggregate([
     {
       $match: { owner, confirmed: true },
     },
@@ -48,6 +54,9 @@ const getUserOrderCount = async (req) => {
       },
     },
   ]);
+
+  const { totalOrderedDish } = secondResult || {};
+
   const result = await Order.aggregate([
     {
       $match: { owner, confirmed: false },

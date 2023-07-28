@@ -1,6 +1,4 @@
-const {
-  getDishesByCategory,
-} = require("../../services/dishes/getDishesByCategory");
+const { getDishesByCategory } = require("../../services/dishes");
 
 const getDishesByCategoryController = async (req, res) => {
   const result = await getDishesByCategory(req);

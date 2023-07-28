@@ -1,4 +1,4 @@
-const { verifyUser } = require("../../services/auth/verifyUser");
+const { verifyUser } = require("../../services/auth");
 
 const verifiedController = async (req, res) => {
   const result = await verifyUser(req);
