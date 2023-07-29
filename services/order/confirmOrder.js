@@ -6,12 +6,22 @@ const { User } = require("../../models/userModel");
 const { verifyToken } = require("../../helpers/verifyToken");
 
 const confirmOrder = async (req) => {
-  const { _id, paymentMethod, tipAmount } = req.body;
+  const { _id, paymentMethod, tipAmount, orderedDish, note } = req.body;
+  console.log("confirmOrder => req.body:", req.body);
 
   const { authorization = "" } = req.headers;
 
   const [, token] = authorization.split(" ");
   const orderId = new ObjectId(_id);
+
+  await Order.findByIdAndUpdate(
+    { _id },
+    {
+      orderedDish,
+      note,
+    },
+    { new: true }
+  );
 
   const [{ totalPrice }] = await Order.aggregate([
     {
