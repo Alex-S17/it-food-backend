@@ -6,8 +6,7 @@ const { User } = require("../../models/userModel");
 const { verifyToken } = require("../../helpers/verifyToken");
 
 const confirmOrder = async (req) => {
-  const { _id, paymentMethod, tipAmount, orderedDish, note } = req.body;
-  console.log("confirmOrder => req.body:", req.body);
+  const { _id, paymentMethod, tipAmount, orderedDish, note, option } = req.body;
 
   const { authorization = "" } = req.headers;
 
@@ -16,10 +15,7 @@ const confirmOrder = async (req) => {
 
   await Order.findByIdAndUpdate(
     { _id },
-    {
-      orderedDish,
-      note,
-    },
+    { tipAmount, paymentMethod, orderedDish, note, option },
     { new: true }
   );
 
@@ -104,6 +100,7 @@ const confirmOrder = async (req) => {
     const { _id: owner } = verifiedToken || {};
 
     const ownerId = new ObjectId(owner);
+
     const calculatedGiftCoin = (
       (((totalPrice / 100) * 0.03 * tipAmount) / 10) *
       100
@@ -112,8 +109,6 @@ const confirmOrder = async (req) => {
     const updatedOrder = await Order.findByIdAndUpdate(
       { _id },
       {
-        paymentMethod,
-        tipAmount,
         totalPrice: totalPrice / 100,
         totalWithTipsPrice,
         confirmed: true,
@@ -141,8 +136,6 @@ const confirmOrder = async (req) => {
     return await Order.findByIdAndUpdate(
       { _id },
       {
-        paymentMethod,
-        tipAmount,
         totalPrice: totalPrice / 100,
         totalWithTipsPrice,
         confirmed: true,
