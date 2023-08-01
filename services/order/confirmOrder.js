@@ -6,12 +6,18 @@ const { User } = require("../../models/userModel");
 const { verifyToken } = require("../../helpers/verifyToken");
 
 const confirmOrder = async (req) => {
-  const { _id, paymentMethod, tipAmount } = req.body;
+  const { _id, paymentMethod, tipAmount, orderedDish, note, option } = req.body;
 
   const { authorization = "" } = req.headers;
 
   const [, token] = authorization.split(" ");
   const orderId = new ObjectId(_id);
+
+  await Order.findByIdAndUpdate(
+    { _id },
+    { tipAmount, paymentMethod, orderedDish, note, option },
+    { new: true }
+  );
 
   const [{ totalPrice }] = await Order.aggregate([
     {
@@ -94,6 +100,7 @@ const confirmOrder = async (req) => {
     const { _id: owner } = verifiedToken || {};
 
     const ownerId = new ObjectId(owner);
+
     const calculatedGiftCoin = (
       (((totalPrice / 100) * 0.03 * tipAmount) / 10) *
       100
@@ -102,8 +109,6 @@ const confirmOrder = async (req) => {
     const updatedOrder = await Order.findByIdAndUpdate(
       { _id },
       {
-        paymentMethod,
-        tipAmount,
         totalPrice: totalPrice / 100,
         totalWithTipsPrice,
         confirmed: true,
@@ -131,8 +136,6 @@ const confirmOrder = async (req) => {
     return await Order.findByIdAndUpdate(
       { _id },
       {
-        paymentMethod,
-        tipAmount,
         totalPrice: totalPrice / 100,
         totalWithTipsPrice,
         confirmed: true,
