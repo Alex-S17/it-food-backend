@@ -1,7 +1,5 @@
-
-const {
-  deleteFromFavoriteDishes,
-} = require("../../services/user");
+const { ConflictDataError } = require("../../helpers/errors");
+const { deleteFromFavoriteDishes } = require("../../services/user");
 
 const deleteFromFavoriteDishesController = async (req, res) => {
   // const currentUser = await getCurrentUser(req);
@@ -15,13 +13,19 @@ const deleteFromFavoriteDishesController = async (req, res) => {
   // console.log("delFavorite1=", delFavorite);
 
   if (!arrayOfFavorite.includes(delFavorite)) {
-    res.json({
-      code: 202,
-      status: "This dish was not include in your List of favorite dishes",
-      // newArrayOfFavorite: req.user.favorite,
-    });
-    return;
+    throw new ConflictDataError(
+      "This dish was not include in your List of favorite dishes"
+    );
   }
+
+  // if (!arrayOfFavorite.includes(delFavorite)) {
+  //   res.json({
+  //     code: 409,
+  //     status: "This dish was not include in your List of favorite dishes",
+  //     // newArrayOfFavorite: req.user.favorite,
+  //   });
+  //   return;
+  // }
 
   const newArrayOfFavorite = await deleteFromFavoriteDishes(
     req,

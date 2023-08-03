@@ -1,3 +1,4 @@
+const { ConflictDataError } = require("../../helpers/errors");
 const { addToFavoriteDishes } = require("../../services/user");
 
 const addToFavoriteDishesController = async (req, res) => {
@@ -12,13 +13,16 @@ const addToFavoriteDishesController = async (req, res) => {
   // console.log("newFavorite1=", newFavorite);
 
   if (arrayOfFavorite.includes(newFavorite)) {
-    res.json({
-      code: 202,
-      status: "This dish is already added to your List of favorite dishes",
-      // newArrayOfFavorite: req.user.favorite,
-    });
-    // console.log("req.user.favorite=", req.user.favorite);
-    return;
+    throw new ConflictDataError(
+      "This dish is already added to your List of favorite dishes"
+    );
+    // res.json({
+    //   code: 409,
+    //   status: "This dish is already added to your List of favorite dishes",
+    //   // newArrayOfFavorite: req.user.favorite,
+    // });
+    // // console.log("req.user.favorite=", req.user.favorite);
+    // return;
   }
 
   const newArrayOfFavorite = await addToFavoriteDishes(req, arrayOfFavorite);
