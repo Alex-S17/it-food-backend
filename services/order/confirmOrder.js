@@ -19,9 +19,9 @@ const confirmOrder = async (req) => {
     { new: true }
   );
 
-  const [{ totalPrice }] = await Order.aggregate([
+  const result = await Order.aggregate([
     {
-      $match: { _id: orderId },
+      $match: { _id: orderId, confirmed: false },
     },
     {
       $lookup: {
@@ -88,7 +88,9 @@ const confirmOrder = async (req) => {
     },
   ]);
 
-  if (!totalPrice) throw new NonExistingParamsError("Credentials error");
+  const { totalPrice } = result[0] || false;
+
+  if (!totalPrice) throw new NonExistingParamsError("Request error");
 
   const totalWithTipsPrice = (
     totalPrice / 100 +

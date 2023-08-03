@@ -1,7 +1,4 @@
-const {
-  NonExistingParamsError,
-  NotAuthorizedError,
-} = require("../../helpers/errors");
+const { NonExistingParamsError } = require("../../helpers/errors");
 const { Order } = require("../../models/orderModel");
 const ObjectId = require("mongodb").ObjectId;
 
@@ -16,7 +13,7 @@ const getOrderById = async (req) => {
 
   const result = await Order.aggregate([
     {
-      $match: { _id, owner },
+      $match: { _id, owner, confirmed: false },
     },
 
     {
@@ -60,7 +57,7 @@ const getOrderById = async (req) => {
     },
   ]);
 
-  if (result.length <= 0) throw new NotAuthorizedError("Not authorized");
+  if (result.length <= 0) throw new NonExistingParamsError("Request error");
 
   return result[0];
 };
