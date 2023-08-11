@@ -87,9 +87,9 @@ const userSchema = Schema(
     favorite: {
       type: Array,
       default: [
-        "640cd5ac2d9fecf12e88985b",
-        "640cd5ac2d9fecf12e88981c",
-        "640cd5ac2d9fecf12e88988d",
+        // "640cd5ac2d9fecf12e88985b",
+        // "640cd5ac2d9fecf12e88981c",
+        // "640cd5ac2d9fecf12e88988d",
       ],
     },
   },
